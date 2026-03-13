@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ログイン - TaskFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #3b82f6;
+      --accent: #06b6d4;
+      --gradient: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+      --text: #0f172a; --text-secondary: #475569; --text-light: #94a3b8;
+      --bg: #ffffff; --bg-alt: #f8fafc; --border: #e2e8f0;
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+      --shadow-xl: 0 20px 50px -12px rgba(0,0,0,0.15);
+      --radius: 12px; --radius-lg: 20px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      color: var(--text); line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* Layout */
+    .login-page {
+      flex: 1; display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* Left: Branding */
+    .login-branding {
+      background: var(--gradient); position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 60px;
+    }
+    .login-branding::before {
+      content: ''; position: absolute; top: -200px; right: -200px;
+      width: 500px; height: 500px; background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .login-branding::after {
+      content: ''; position: absolute; bottom: -150px; left: -150px;
+      width: 400px; height: 400px; background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+    .branding-content { position: relative; z-index: 1; max-width: 480px; }
+    .branding-logo {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none; margin-bottom: 48px;
+    }
+    .branding-logo-icon {
+      width: 44px; height: 44px; background: rgba(255,255,255,0.2);
+      border-radius: 12px; display: flex; align-items: center;
+      justify-content: center; color: #fff; font-size: 1.3rem; font-weight: 800;
+    }
+    .branding-logo-text {
+      font-size: 1.6rem; font-weight: 800; color: #fff;
+    }
+    .branding-content h1 {
+      font-size: 2.4rem; font-weight: 800; color: #fff;
+      line-height: 1.3; margin-bottom: 20px; letter-spacing: -0.02em;
+    }
+    .branding-content p {
+      font-size: 1.05rem; color: rgba(255,255,255,0.8);
+      line-height: 1.8; margin-bottom: 40px;
+    }
+    .branding-features {
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .branding-feature {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .branding-feature-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .branding-feature span {
+      font-size: 0.95rem; color: rgba(255,255,255,0.9); font-weight: 500;
+    }
+    .branding-stats {
+      display: flex; gap: 36px; margin-top: 48px;
+      padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.15);
+    }
+    .branding-stat-value { font-size: 1.4rem; font-weight: 800; color: #fff; }
+    .branding-stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+    /* Right: Form */
+    .login-form-side {
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px;
+      background: var(--bg);
+    }
+    .login-form-wrapper {
+      width: 100%; max-width: 420px;
+    }
+    .login-form-header {
+      margin-bottom: 32px;
+    }
+    .login-form-header h2 {
+      font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .login-form-header p {
+      font-size: 0.95rem; color: var(--text-secondary);
+    }
+    .login-form-header p a {
+      color: var(--primary); text-decoration: none; font-weight: 600;
+    }
+    .login-form-header p a:hover { text-decoration: underline; }
+
+    /* Tabs */
+    .login-tabs {
+      display: flex; border-bottom: 2px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .login-tab {
+      flex: 1; padding: 12px 0; text-align: center;
+      font-size: 0.95rem; font-weight: 600; color: var(--text-light);
+      cursor: pointer; border: none; background: none;
+      font-family: inherit; position: relative;
+      transition: color 0.2s;
+    }
+    .login-tab.active { color: var(--primary); }
+    .login-tab.active::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+      height: 2px; background: var(--primary); border-radius: 2px;
+    }
+    .login-tab:hover { color: var(--primary); }
+
+    /* Tab Panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Social Login */
+    .social-login { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .social-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 12px 20px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--bg);
+      font-size: 0.95rem; font-weight: 600; color: var(--text);
+      cursor: pointer; font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .social-btn:hover {
+      border-color: var(--primary); background: var(--bg-alt);
+    }
+    .social-btn svg { width: 20px; height: 20px; }
+    .social-btn .social-icon {
+      width: 20px; height: 20px; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+
+    .divider {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 28px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .divider span {
+      font-size: 0.82rem; color: var(--text-light); font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Form */
+    .form-group {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-bottom: 20px;
+    }
+    .form-label {
+      font-size: 0.88rem; font-weight: 600; color: var(--text);
+    }
+    .form-input-wrapper {
+      position: relative;
+    }
+    .form-input {
+      width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 0.95rem; font-family: inherit;
+      color: var(--text); background: var(--bg);
+      transition: all 0.2s ease; outline: none;
+    }
+    .form-input::placeholder { color: var(--text-light); }
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .form-input.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+    .form-error-msg {
+      font-size: 0.8rem; color: #ef4444; font-weight: 500;
+      display: none;
+    }
+    .form-error-msg.show { display: block; }
+
+    .password-toggle {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: var(--text-light); font-size: 1.1rem;
+      padding: 4px; transition: color 0.2s;
+    }
+    .password-toggle:hover { color: var(--text-secondary); }
+    .form-input.has-toggle { padding-right: 44px; }
+
+    .form-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .remember-me {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+    }
+    .remember-me input {
+      width: 18px; height: 18px; border-radius: 5px;
+      accent-color: var(--primary); cursor: pointer;
+    }
+    .remember-me span {
+      font-size: 0.88rem; color: var(--text-secondary);
+    }
+    .forgot-link {
+      font-size: 0.88rem; color: var(--primary); text-decoration: none;
+      font-weight: 600;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .submit-btn {
+      width: 100%; padding: 14px 24px; border-radius: 12px;
+      font-size: 1rem; font-weight: 700; border: none;
+      cursor: pointer; font-family: inherit;
+      background: var(--gradient); color: #fff;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.45);
+    }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled {
+      opacity: 0.7; cursor: not-allowed; transform: none;
+    }
+    .submit-btn .spinner {
+      display: none; width: 20px; height: 20px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.6s linear infinite; margin: 0 auto;
+    }
+    .submit-btn.loading .btn-text { display: none; }
+    .submit-btn.loading .spinner { display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .login-footer {
+      margin-top: 32px; text-align: center;
+      font-size: 0.82rem; color: var(--text-light); line-height: 1.8;
+    }
+    .login-footer a {
+      color: var(--text-secondary); text-decoration: none;
+    }
+    .login-footer a:hover { text-decoration: underline; }
+
+    /* Toast */
+    .toast {
+      position: fixed; top: 24px; right: 24px; z-index: 3000;
+      display: none; align-items: center; gap: 12px;
+      padding: 16px 24px; border-radius: var(--radius);
+      background: #fff; border: 1px solid var(--border);
+      box-shadow: var(--shadow-xl);
+      animation: toastIn 0.4s ease;
+      max-width: 400px;
+    }
+    .toast.show { display: flex; }
+    .toast.error { border-color: #fca5a5; }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .toast-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .toast-icon.error { background: #fee2e2; color: #ef4444; }
+    .toast-icon.success { background: #d1fae5; color: #059669; }
+    .toast-title { font-size: 0.9rem; font-weight: 700; }
+    .toast-msg { font-size: 0.82rem; color: var(--text-secondary); }
+    .toast-close {
+      position: absolute; top: 8px; right: 8px;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-light); font-size: 1.1rem; padding: 4px;
+    }
+
+    /* Forgot Password Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 24px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: #fff; border-radius: var(--radius-lg); padding: 40px;
+      max-width: 440px; width: 100%;
+      box-shadow: var(--shadow-xl); animation: modalIn 0.35s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-close {
+      float: right; background: none; border: none; cursor: pointer;
+      color: var(--text-light); font-size: 1.3rem; padding: 0;
+      margin: -8px -8px 0 0; transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal h3 {
+      font-size: 1.3rem; font-weight: 800; margin-bottom: 8px;
+      clear: both;
+    }
+    .modal > p {
+      font-size: 0.92rem; color: var(--text-secondary);
+      line-height: 1.7; margin-bottom: 24px;
+    }
+    .modal .form-group { margin-bottom: 20px; }
+    .modal .submit-btn { margin-top: 4px; }
+
+    /* Sent state */
+    .reset-sent { text-align: center; display: none; }
+    .reset-sent.show { display: block; }
+    .reset-form.hide { display: none; }
+    .reset-sent-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #d1fae5; display: flex; align-items: center;
+      justify-content: center; font-size: 1.6rem; margin: 0 auto 16px;
+    }
+    .reset-sent h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+    .reset-sent p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .login-branding { padding: 48px; }
+      .branding-content h1 { font-size: 2rem; }
+    }
+    @media (max-width: 768px) {
+      .login-page { grid-template-columns: 1fr; }
+      .login-branding { display: none; }
+      .login-form-side { padding: 24px; min-height: 100vh; }
+      .login-form-wrapper { max-width: 100%; }
+      .login-form-header h2 { font-size: 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .login-form-side { padding: 20px; }
+      .form-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+
+    <!-- Left: Branding -->
+    <div class="login-branding">
+      <div class="branding-content">
+        <a href="index.html" class="branding-logo">
+          <div class="branding-logo-icon">T</div>
+          <div class="branding-logo-text">TaskFlow</div>
+        </a>
+        <h1>チームの生産性を<br>次のレベルへ</h1>
+        <p>プロジェクト管理・タスク管理・チームコラボレーションをひとつのプラットフォームで。</p>
+        <div class="branding-features">
+          <div class="branding-feature">
+            <div class="branding-feature-icon">📋</div>
+            <span>直感的なカンバン・ガントチャート</span>
+          </div>
+          <div class="branding-feature">
+            <div class="branding-feature-icon">⚡</div>
+            <span>リアルタイムのチームコラボレーション</span>
+          </div>
+          <div class="branding-feature">
+            <div class="branding-feature-icon">🔗</div>
+            <span>Slack・GitHub・Figma と連携</span>
+          </div>
+          <div class="branding-feature">
+            <div class="branding-feature-icon">📊</div>
+            <span>データドリブンな分析ダッシュボード</span>
+          </div>
+        </div>
+        <div class="branding-stats">
+          <div>
+            <div class="branding-stat-value">12,000+</div>
+            <div class="branding-stat-label">導入チーム</div>
+          </div>
+          <div>
+            <div class="branding-stat-value">98.7%</div>
+            <div class="branding-stat-label">継続率</div>
+          </div>
+          <div>
+            <div class="branding-stat-value">4.9/5</div>
+            <div class="branding-stat-label">満足度</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Form -->
+    <div class="login-form-side">
+      <div class="login-form-wrapper">
+
+        <!-- Mobile logo -->
+        <a href="index.html" class="branding-logo" style="display:none;margin-bottom:32px;">
+          <div class="branding-logo-icon" style="background:var(--gradient);">T</div>
+          <div class="branding-logo-text" style="color:var(--text);">TaskFlow</div>
+        </a>
+        <style>
+          @media (max-width: 768px) {
+            .login-form-wrapper .branding-logo { display: flex !important; }
+          }
+        </style>
+
+        <!-- Tabs -->
+        <div class="login-tabs">
+          <button class="login-tab active" data-tab="login">ログイン</button>
+          <button class="login-tab" data-tab="signup">新規登録</button>
+        </div>
+
+        <!-- Login Panel -->
+        <div class="tab-panel active" id="panel-login">
+          <div class="login-form-header">
+            <h2>おかえりなさい</h2>
+            <p>アカウントにログインしてチームの作業を続けましょう</p>
+          </div>
+
+          <div class="social-login">
+            <button class="social-btn" id="googleLogin">
+              <span class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 001 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+              </span>
+              Google でログイン
+            </button>
+            <button class="social-btn" id="msLogin">
+              <span class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="1" y="1" width="10" height="10" fill="#F25022"/>
+                  <rect x="13" y="1" width="10" height="10" fill="#7FBA00"/>
+                  <rect x="1" y="13" width="10" height="10" fill="#00A4EF"/>
+                  <rect x="13" y="13" width="10" height="10" fill="#FFB900"/>
+                </svg>
+              </span>
+              Microsoft でログイン
+            </button>
+          </div>
+
+          <div class="divider"><span>またはメールアドレスでログイン</span></div>
+
+          <form id="loginForm" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="loginEmail">メールアドレス</label>
+              <input type="email" id="loginEmail" class="form-input" placeholder="you@company.com" required>
+              <div class="form-error-msg" id="loginEmailError">正しいメールアドレスを入力してください</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="loginPassword">パスワード</label>
+              <div class="form-input-wrapper">
+                <input type="password" id="loginPassword" class="form-input has-toggle" placeholder="パスワードを入力" required>
+                <button type="button" class="password-toggle" data-target="loginPassword" aria-label="パスワードを表示">👁</button>
+              </div>
+              <div class="form-error-msg" id="loginPasswordError">パスワードを入力してください</div>
+            </div>
+            <div class="form-row">
+              <label class="remember-me">
+                <input type="checkbox" checked>
+                <span>ログイン状態を保持</span>
+              </label>
+              <a href="#" class="forgot-link" id="forgotLink">パスワードをお忘れですか？</a>
+            </div>
+            <button type="submit" class="submit-btn" id="loginBtn">
+              <span class="btn-text">ログイン</span>
+              <span class="spinner"></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Signup Panel -->
+        <div class="tab-panel" id="panel-signup">
+          <div class="login-form-header">
+            <h2>無料アカウント作成</h2>
+            <p>14日間すべての機能を無料でお試しいただけます</p>
+          </div>
+
+          <div class="social-login">
+            <button class="social-btn" id="googleSignup">
+              <span class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 001 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+              </span>
+              Google で登録
+            </button>
+            <button class="social-btn" id="msSignup">
+              <span class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="1" y="1" width="10" height="10" fill="#F25022"/>
+                  <rect x="13" y="1" width="10" height="10" fill="#7FBA00"/>
+                  <rect x="1" y="13" width="10" height="10" fill="#00A4EF"/>
+                  <rect x="13" y="13" width="10" height="10" fill="#FFB900"/>
+                </svg>
+              </span>
+              Microsoft で登録
+            </button>
+          </div>
+
+          <div class="divider"><span>またはメールアドレスで登録</span></div>
+
+          <form id="signupForm" novalidate>
+            <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div>
+                <label class="form-label" for="signupLastName">姓</label>
+                <input type="text" id="signupLastName" class="form-input" placeholder="山田" required style="margin-top:6px;">
+                <div class="form-error-msg" id="signupLastNameError">姓を入力してください</div>
+              </div>
+              <div>
+                <label class="form-label" for="signupFirstName">名</label>
+                <input type="text" id="signupFirstName" class="form-input" placeholder="太郎" required style="margin-top:6px;">
+                <div class="form-error-msg" id="signupFirstNameError">名を入力してください</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signupEmail">メールアドレス</label>
+              <input type="email" id="signupEmail" class="form-input" placeholder="you@company.com" required>
+              <div class="form-error-msg" id="signupEmailError">正しいメールアドレスを入力してください</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signupPassword">パスワード</label>
+              <div class="form-input-wrapper">
+                <input type="password" id="signupPassword" class="form-input has-toggle" placeholder="8文字以上で入力" required>
+                <button type="button" class="password-toggle" data-target="signupPassword" aria-label="パスワードを表示">👁</button>
+              </div>
+              <div class="form-error-msg" id="signupPasswordError">8文字以上のパスワードを入力してください</div>
+              <div class="password-strength" id="passwordStrength" style="margin-top:8px;display:none;">
+                <div style="display:flex;gap:4px;margin-bottom:4px;">
+                  <div class="strength-bar" style="flex:1;height:3px;border-radius:3px;background:var(--border);"></div>
+                  <div class="strength-bar" style="flex:1;height:3px;border-radius:3px;background:var(--border);"></div>
+                  <div class="strength-bar" style="flex:1;height:3px;border-radius:3px;background:var(--border);"></div>
+                  <div class="strength-bar" style="flex:1;height:3px;border-radius:3px;background:var(--border);"></div>
+                </div>
+                <div class="strength-text" style="font-size:0.78rem;color:var(--text-light);font-weight:500;"></div>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:24px;">
+              <label class="form-label" for="signupCompany">会社名</label>
+              <input type="text" id="signupCompany" class="form-input" placeholder="株式会社サンプル" required>
+              <div class="form-error-msg" id="signupCompanyError">会社名を入力してください</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;">
+              <input type="checkbox" id="signupTerms" style="width:18px;height:18px;border-radius:5px;accent-color:var(--primary);cursor:pointer;flex-shrink:0;margin-top:2px;">
+              <label for="signupTerms" style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;cursor:pointer;">
+                <a href="terms.html" target="_blank" style="color:var(--primary);text-decoration:none;">利用規約</a>および<a href="privacy.html" target="_blank" style="color:var(--primary);text-decoration:none;">プライバシーポリシー</a>に同意します
+              </label>
+            </div>
+            <div class="form-error-msg" id="signupTermsError" style="margin-top:-16px;margin-bottom:16px;">利用規約への同意が必要です</div>
+            <button type="submit" class="submit-btn" id="signupBtn">
+              <span class="btn-text">無料で始める</span>
+              <span class="spinner"></span>
+            </button>
+          </form>
+        </div>
+
+        <div class="login-footer">
+          <a href="index.html">← TaskFlow トップページに戻る</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal-overlay" id="forgotModal">
+    <div class="modal">
+      <button class="modal-close" id="forgotClose">&times;</button>
+      <div class="reset-form" id="resetForm">
+        <h3>パスワードをリセット</h3>
+        <p>ご登録のメールアドレスを入力してください。パスワードリセット用のリンクを送信します。</p>
+        <form id="resetFormEl" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="resetEmail">メールアドレス</label>
+            <input type="email" id="resetEmail" class="form-input" placeholder="you@company.com" required>
+            <div class="form-error-msg" id="resetEmailError">正しいメールアドレスを入力してください</div>
+          </div>
+          <button type="submit" class="submit-btn" id="resetBtn">
+            <span class="btn-text">リセットリンクを送信</span>
+            <span class="spinner"></span>
+          </button>
+        </form>
+      </div>
+      <div class="reset-sent" id="resetSent">
+        <div class="reset-sent-icon">✉️</div>
+        <h3>メールを送信しました</h3>
+        <p>パスワードリセット用のリンクを送信しました。メールボックスをご確認ください。メールが届かない場合は、迷惑メールフォルダもご確認ください。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="toast-icon error" id="toastIcon">!</div>
+    <div>
+      <div class="toast-title" id="toastTitle"></div>
+      <div class="toast-msg" id="toastMsg"></div>
+    </div>
+    <button class="toast-close" id="toastClose">&times;</button>
+  </div>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.login-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Password toggle
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.target);
+        if (input.type === 'password') {
+          input.type = 'text';
+          btn.textContent = '🙈';
+        } else {
+          input.type = 'password';
+          btn.textContent = '👁';
+        }
+      });
+    });
+
+    // Password strength
+    const signupPassword = document.getElementById('signupPassword');
+    const strengthEl = document.getElementById('passwordStrength');
+    signupPassword.addEventListener('input', () => {
+      const val = signupPassword.value;
+      if (val.length === 0) { strengthEl.style.display = 'none'; return; }
+      strengthEl.style.display = 'block';
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[a-z]/.test(val) && /[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^a-zA-Z0-9]/.test(val)) score++;
+
+      const colors = ['#ef4444', '#f59e0b', '#06b6d4', '#059669'];
+      const labels = ['弱い', 'まあまあ', '良い', '強い'];
+      const bars = strengthEl.querySelectorAll('.strength-bar');
+      bars.forEach((bar, i) => {
+        bar.style.background = i < score ? colors[score - 1] : 'var(--border)';
+      });
+      strengthEl.querySelector('.strength-text').textContent = labels[score - 1] || '';
+      strengthEl.querySelector('.strength-text').style.color = colors[score - 1] || 'var(--text-light)';
+    });
+
+    // Clear errors on input
+    document.querySelectorAll('.form-input').forEach(el => {
+      el.addEventListener('input', () => {
+        el.classList.remove('error');
+        const errEl = document.getElementById(el.id + 'Error');
+        if (errEl) errEl.classList.remove('show');
+      });
+    });
+
+    // Toast
+    let toastTimer;
+    function showToast(title, msg, type) {
+      const toast = document.getElementById('toast');
+      const icon = document.getElementById('toastIcon');
+      document.getElementById('toastTitle').textContent = title;
+      document.getElementById('toastMsg').textContent = msg;
+      icon.className = 'toast-icon ' + type;
+      icon.textContent = type === 'error' ? '!' : '✓';
+      toast.className = 'toast show ' + type;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 5000);
+    }
+    document.getElementById('toastClose').addEventListener('click', () => {
+      document.getElementById('toast').classList.remove('show');
+    });
+
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+      const email = document.getElementById('loginEmail');
+      const password = document.getElementById('loginPassword');
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        email.classList.add('error');
+        document.getElementById('loginEmailError').classList.add('show');
+        valid = false;
+      }
+      if (password.value.trim() === '') {
+        password.classList.add('error');
+        document.getElementById('loginPasswordError').classList.add('show');
+        valid = false;
+      }
+      if (!valid) return;
+
+      const btn = document.getElementById('loginBtn');
+      btn.classList.add('loading'); btn.disabled = true;
+      setTimeout(() => {
+        btn.classList.remove('loading'); btn.disabled = false;
+        showToast('ログインエラー', 'メールアドレスまたはパスワードが正しくありません。', 'error');
+      }, 1500);
+    });
+
+    // Signup form
+    document.getElementById('signupForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+      const fields = [
+        { id: 'signupLastName', check: v => v.trim() !== '' },
+        { id: 'signupFirstName', check: v => v.trim() !== '' },
+        { id: 'signupEmail', check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+        { id: 'signupPassword', check: v => v.length >= 8 },
+        { id: 'signupCompany', check: v => v.trim() !== '' },
+      ];
+      fields.forEach(f => {
+        const el = document.getElementById(f.id);
+        const err = document.getElementById(f.id + 'Error');
+        if (!f.check(el.value)) {
+          el.classList.add('error'); if (err) err.classList.add('show');
+          valid = false;
+        } else {
+          el.classList.remove('error'); if (err) err.classList.remove('show');
+        }
+      });
+      const terms = document.getElementById('signupTerms');
+      const termsErr = document.getElementById('signupTermsError');
+      if (!terms.checked) { termsErr.classList.add('show'); valid = false; }
+      else { termsErr.classList.remove('show'); }
+
+      if (!valid) return;
+
+      const btn = document.getElementById('signupBtn');
+      btn.classList.add('loading'); btn.disabled = true;
+      setTimeout(() => {
+        btn.classList.remove('loading'); btn.disabled = false;
+        showToast('ログインエラー', '現在新規登録を受け付けておりません。お問い合わせフォームよりご連絡ください。', 'error');
+      }, 1500);
+    });
+
+    // Social login buttons
+    ['googleLogin','msLogin','googleSignup','msSignup'].forEach(id => {
+      document.getElementById(id).addEventListener('click', () => {
+        showToast('ログインエラー', 'ソーシャルログインは現在メンテナンス中です。メールアドレスでログインしてください。', 'error');
+      });
+    });
+
+    // Forgot password
+    const forgotModal = document.getElementById('forgotModal');
+    document.getElementById('forgotLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      forgotModal.classList.add('show');
+    });
+    document.getElementById('forgotClose').addEventListener('click', () => {
+      forgotModal.classList.remove('show');
+      // Reset state
+      document.getElementById('resetForm').classList.remove('hide');
+      document.getElementById('resetSent').classList.remove('show');
+    });
+    forgotModal.addEventListener('click', (e) => {
+      if (e.target === forgotModal) {
+        forgotModal.classList.remove('show');
+        document.getElementById('resetForm').classList.remove('hide');
+        document.getElementById('resetSent').classList.remove('show');
+      }
+    });
+
+    document.getElementById('resetFormEl').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('resetEmail');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        email.classList.add('error');
+        document.getElementById('resetEmailError').classList.add('show');
+        return;
+      }
+      const btn = document.getElementById('resetBtn');
+      btn.classList.add('loading'); btn.disabled = true;
+      setTimeout(() => {
+        btn.classList.remove('loading'); btn.disabled = false;
+        document.getElementById('resetForm').classList.add('hide');
+        document.getElementById('resetSent').classList.add('show');
+      }, 1200);
+    });
+  </script>
+</body>
+</html>

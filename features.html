@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>機能一覧 - TaskFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #3b82f6;
+      --accent: #06b6d4;
+      --gradient: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+      --gradient-bg: linear-gradient(135deg, #eff6ff 0%, #ecfeff 100%);
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --text-light: #94a3b8;
+      --bg: #ffffff;
+      --bg-alt: #f8fafc;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+      --shadow-xl: 0 20px 50px -12px rgba(0,0,0,0.15);
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ===== Fade-in Animation ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+
+    /* ===== Header ===== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(226,232,240,0.5);
+      transition: box-shadow 0.3s ease;
+    }
+    .header.scrolled {
+      box-shadow: var(--shadow-md);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--text);
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--gradient);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+    .nav { display: flex; align-items: center; gap: 32px; }
+    .nav a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav a:hover { color: var(--primary); }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.45);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-large {
+      padding: 16px 36px;
+      font-size: 1.05rem;
+      border-radius: 14px;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 10px 20px;
+    }
+    .btn-ghost:hover { color: var(--primary); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* ===== Page Hero ===== */
+    .page-hero {
+      padding: 140px 0 60px;
+      background: var(--gradient);
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      left: -100px;
+      width: 300px;
+      height: 300px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    .page-hero .container { position: relative; z-index: 1; }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 16px;
+    }
+    .breadcrumb a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: #fff; }
+    .breadcrumb span { color: rgba(255,255,255,0.4); }
+    .page-hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .page-hero-desc {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.85);
+      max-width: 600px;
+      line-height: 1.8;
+    }
+
+    /* ===== Section Common ===== */
+    .section { padding: 100px 0; }
+    .section-alt { background: var(--bg-alt); }
+    .section-header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 64px;
+    }
+    .section-label {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(37,99,235,0.08);
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* ===== Feature Detail ===== */
+    .feature-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .feature-detail.reverse {
+      direction: rtl;
+    }
+    .feature-detail.reverse > * {
+      direction: ltr;
+    }
+    .feature-detail-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+    .feature-detail-icon.blue { background: #dbeafe; }
+    .feature-detail-icon.cyan { background: #cffafe; }
+    .feature-detail-icon.violet { background: #ede9fe; }
+    .feature-detail-icon.amber { background: #fef3c7; }
+    .feature-detail-icon.green { background: #d1fae5; }
+    .feature-detail-icon.rose { background: #ffe4e6; }
+    .feature-detail-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .feature-detail h3 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+    .feature-detail p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    .feature-detail-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .feature-detail-points li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+    .feature-detail-points li::before {
+      content: '\2713';
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #d1fae5;
+      color: #059669;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* Feature Mockup */
+    .feature-mockup {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .mockup-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+    }
+    .mockup-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .mockup-dot.red { background: #f87171; }
+    .mockup-dot.yellow { background: #fbbf24; }
+    .mockup-dot.green { background: #34d399; }
+    .mockup-body { padding: 24px; }
+
+    /* Kanban Mockup */
+    .kanban-mockup {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+    .kanban-col h4 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .kanban-col.todo h4 { background: #dbeafe; color: #2563eb; }
+    .kanban-col.progress h4 { background: #fef3c7; color: #d97706; }
+    .kanban-col.done h4 { background: #d1fae5; color: #059669; }
+    .kanban-item {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .kanban-item .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .tag-blue { background: #dbeafe; color: #2563eb; }
+    .tag-orange { background: #ffedd5; color: #ea580c; }
+    .tag-green { background: #d1fae5; color: #059669; }
+    .tag-purple { background: #ede9fe; color: #7c3aed; }
+
+    /* Collab Mockup */
+    .collab-mockup { display: flex; flex-direction: column; gap: 12px; }
+    .collab-msg {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .collab-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .collab-bubble {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      max-width: 80%;
+    }
+    .collab-bubble .name {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 0.78rem;
+      margin-bottom: 4px;
+    }
+    .collab-bubble .time {
+      font-size: 0.68rem;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* Dashboard Mockup */
+    .dashboard-mockup { display: flex; flex-direction: column; gap: 16px; }
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .dash-stat {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .dash-stat-value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .dash-stat-label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+    .dash-chart {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      height: 120px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .dash-bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      min-height: 10px;
+    }
+
+    /* Automation Mockup */
+    .auto-mockup { display: flex; flex-direction: column; gap: 14px; }
+    .auto-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .auto-step-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .auto-step-text {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .auto-step-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .auto-arrow {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 1.2rem;
+    }
+
+    /* Time Tracking Mockup */
+    .time-mockup { display: flex; flex-direction: column; gap: 10px; }
+    .time-entry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .time-entry-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .time-entry-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .time-entry-name {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .time-entry-dur {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Mobile Mockup */
+    .mobile-mockup-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .phone-mockup {
+      width: 200px;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: var(--shadow-xl);
+      border: 3px solid var(--border);
+      overflow: hidden;
+    }
+    .phone-notch {
+      height: 24px;
+      background: #000;
+      border-radius: 0 0 14px 14px;
+      margin: 0 40px;
+    }
+    .phone-body {
+      padding: 12px;
+    }
+    .phone-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+    }
+    .phone-card strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 4px;
+      font-size: 0.72rem;
+    }
+
+    /* ===== CTA ===== */
+    .cta-section { padding: 100px 0; }
+    .cta-box {
+      background: var(--gradient);
+      border-radius: var(--radius-lg);
+      padding: 80px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .cta-box::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -60px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    .cta-box h2 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-box p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 36px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-box .btn {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      position: relative;
+      z-index: 1;
+    }
+    .cta-box .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.7);
+      padding: 64px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand p {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      margin-top: 16px;
+      max-width: 300px;
+    }
+    .footer h4 {
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-links a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+    .footer-socials {
+      display: flex;
+      gap: 16px;
+    }
+    .footer-socials a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 1.1rem;
+      transition: color 0.2s;
+    }
+    .footer-socials a:hover { color: #fff; }
+
+    /* ===== Mobile Nav ===== */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 72px;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 8px 0;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 1024px) {
+      .feature-detail { gap: 40px; }
+    }
+
+    @media (max-width: 768px) {
+      .nav { display: none; }
+      .header-actions .btn-ghost,
+      .header-actions .btn-secondary { display: none; }
+      .hamburger { display: flex; }
+
+      .page-hero { padding: 120px 0 48px; }
+      .page-hero h1 { font-size: 2rem; }
+
+      .section { padding: 64px 0; }
+      .section-title { font-size: 1.8rem; }
+      .section-header { margin-bottom: 40px; }
+
+      .feature-detail {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .feature-detail.reverse {
+        direction: ltr;
+      }
+      .feature-detail h3 { font-size: 1.4rem; }
+      .kanban-mockup { grid-template-columns: 1fr; }
+
+      .cta-box { padding: 48px 28px; }
+      .cta-box h2 { font-size: 1.6rem; }
+
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+
+      .mobile-mockup-wrapper { flex-direction: column; align-items: center; }
+    }
+
+    @media (max-width: 480px) {
+      .page-hero h1 { font-size: 1.7rem; }
+      .dash-stats { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">T</div>
+        TaskFlow
+      </a>
+      <nav class="nav">
+        <a href="index.html#features">機能</a>
+        <a href="index.html#pricing">料金</a>
+        <a href="index.html#testimonials">導入事例</a>
+        <a href="index.html#faq">FAQ</a>
+      </nav>
+      <div class="header-actions">
+        <a href="login.html" class="btn btn-ghost">ログイン</a>
+        <a href="contact.html" class="btn btn-secondary">お問い合わせ</a>
+        <a href="contact.html" class="btn btn-primary">無料で始める</a>
+        <button class="hamburger" id="hamburger" aria-label="メニュー">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html#features">機能</a>
+    <a href="index.html#pricing">料金</a>
+    <a href="index.html#testimonials">導入事例</a>
+    <a href="index.html#faq">FAQ</a>
+    <a href="login.html">ログイン</a>
+    <a href="contact.html" class="btn btn-primary" style="text-align:center;">無料で始める</a>
+  </div>
+
+  <!-- ===== Page Hero ===== -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb fade-in">
+        <a href="index.html">ホーム</a>
+        <span>/</span>
+        <span style="color:rgba(255,255,255,0.9);">機能一覧</span>
+      </div>
+      <h1 class="fade-in fade-in-delay-1">すべての機能を詳しく</h1>
+      <p class="page-hero-desc fade-in fade-in-delay-2">TaskFlowが提供する強力な機能の数々。チームの生産性を最大化するために設計された、直感的で柔軟なツールをご紹介します。</p>
+    </div>
+  </section>
+
+  <!-- ===== Feature 1: Task Board ===== -->
+  <section class="section" id="taskboard">
+    <div class="container">
+      <div class="feature-detail fade-in">
+        <div>
+          <div class="feature-detail-icon blue">📋</div>
+          <div class="feature-detail-label">Feature 01</div>
+          <h3>タスクボード</h3>
+          <p>カンバン・リスト・ガントチャートの3つのビューを自由に切り替え。チームのワークスタイルに合わせて、最適な表示形式でタスクを管理できます。ドラッグ＆ドロップの直感的な操作で、タスクのステータス変更やプロジェクト間の移動もスムーズです。</p>
+          <ul class="feature-detail-points">
+            <li>カンバン・リスト・ガントチャートの3ビュー対応</li>
+            <li>ドラッグ＆ドロップで直感的なタスク管理</li>
+            <li>カスタムフィールドとラベルでタスクを分類</li>
+            <li>サブタスクと依存関係の設定</li>
+          </ul>
+        </div>
+        <div class="feature-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot red"></div>
+            <div class="mockup-dot yellow"></div>
+            <div class="mockup-dot green"></div>
+          </div>
+          <div class="mockup-body">
+            <div class="kanban-mockup">
+              <div class="kanban-col todo">
+                <h4>To Do</h4>
+                <div class="kanban-item">UI デザインの修正<div class="tag tag-blue">デザイン</div></div>
+                <div class="kanban-item">API仕様書の更新<div class="tag tag-purple">ドキュメント</div></div>
+              </div>
+              <div class="kanban-col progress">
+                <h4>進行中</h4>
+                <div class="kanban-item">決済機能の実装<div class="tag tag-orange">優先</div></div>
+                <div class="kanban-item">単体テスト作成<div class="tag tag-purple">開発</div></div>
+              </div>
+              <div class="kanban-col done">
+                <h4>完了</h4>
+                <div class="kanban-item">LP デザイン確認<div class="tag tag-green">完了</div></div>
+                <div class="kanban-item">DB設計レビュー<div class="tag tag-green">完了</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Feature 2: Real-time Collaboration ===== -->
+  <section class="section section-alt" id="collaboration">
+    <div class="container">
+      <div class="feature-detail reverse fade-in">
+        <div>
+          <div class="feature-detail-icon cyan">⚡</div>
+          <div class="feature-detail-label">Feature 02</div>
+          <h3>リアルタイムコラボレーション</h3>
+          <p>メンバーの変更が即座に全員の画面に反映されるリアルタイム同期機能。コメント・メンション・ファイル共有・リアクションなど、チーム内のコミュニケーションもTaskFlow上で完結します。外部チャットツールとの行き来を減らし、コンテキストスイッチのコストを削減します。</p>
+          <ul class="feature-detail-points">
+            <li>変更のリアルタイム同期と通知</li>
+            <li>コメント・メンション・スレッド返信</li>
+            <li>ファイル共有とプレビュー（画像・PDF・動画対応）</li>
+            <li>アクティビティログで全変更履歴を追跡</li>
+          </ul>
+        </div>
+        <div class="feature-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot red"></div>
+            <div class="mockup-dot yellow"></div>
+            <div class="mockup-dot green"></div>
+          </div>
+          <div class="mockup-body">
+            <div class="collab-mockup">
+              <div class="collab-msg">
+                <div class="collab-avatar" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">田</div>
+                <div class="collab-bubble">
+                  <div class="name">田中 太郎</div>
+                  API設計レビューの修正が完了しました。@鈴木さん 確認お願いします。
+                  <div class="time">10:23</div>
+                </div>
+              </div>
+              <div class="collab-msg">
+                <div class="collab-avatar" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);">鈴</div>
+                <div class="collab-bubble">
+                  <div class="name">鈴木 美咲</div>
+                  確認しました！エンドポイントの命名規則について1点コメントを追加しました。
+                  <div class="time">10:28</div>
+                </div>
+              </div>
+              <div class="collab-msg">
+                <div class="collab-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">山</div>
+                <div class="collab-bubble">
+                  <div class="name">山田 大輝</div>
+                  design-v2.fig をアップロードしました
+                  <div class="time">10:35</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Feature 3: Analytics Dashboard ===== -->
+  <section class="section" id="analytics">
+    <div class="container">
+      <div class="feature-detail fade-in">
+        <div>
+          <div class="feature-detail-icon violet">📊</div>
+          <div class="feature-detail-label">Feature 03</div>
+          <h3>分析ダッシュボード</h3>
+          <p>プロジェクトの健全性を一目で把握できるダッシュボード。進捗率・メンバーの稼働状況・ボトルネックの特定まで、データに基づいた意思決定をサポートします。カスタムレポートの作成やスケジュール送信で、定期的なステータス共有も自動化できます。</p>
+          <ul class="feature-detail-points">
+            <li>プロジェクト進捗・バーンダウンチャート</li>
+            <li>メンバー別のワークロード分析</li>
+            <li>ボトルネック自動検出とアラート</li>
+            <li>カスタムレポートのスケジュール送信</li>
+          </ul>
+        </div>
+        <div class="feature-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot red"></div>
+            <div class="mockup-dot yellow"></div>
+            <div class="mockup-dot green"></div>
+          </div>
+          <div class="mockup-body">
+            <div class="dashboard-mockup">
+              <div class="dash-stats">
+                <div class="dash-stat">
+                  <div class="dash-stat-value">87%</div>
+                  <div class="dash-stat-label">進捗率</div>
+                </div>
+                <div class="dash-stat">
+                  <div class="dash-stat-value">24</div>
+                  <div class="dash-stat-label">完了タスク</div>
+                </div>
+                <div class="dash-stat">
+                  <div class="dash-stat-value">3</div>
+                  <div class="dash-stat-label">遅延タスク</div>
+                </div>
+              </div>
+              <div class="dash-chart">
+                <div class="dash-bar" style="height:40%;background:#dbeafe;"></div>
+                <div class="dash-bar" style="height:65%;background:#93c5fd;"></div>
+                <div class="dash-bar" style="height:50%;background:#60a5fa;"></div>
+                <div class="dash-bar" style="height:80%;background:#3b82f6;"></div>
+                <div class="dash-bar" style="height:70%;background:#2563eb;"></div>
+                <div class="dash-bar" style="height:90%;background:#1d4ed8;"></div>
+                <div class="dash-bar" style="height:85%;background:var(--gradient);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Feature 4: Workflow Automation ===== -->
+  <section class="section section-alt" id="automation">
+    <div class="container">
+      <div class="feature-detail reverse fade-in">
+        <div>
+          <div class="feature-detail-icon amber">🔄</div>
+          <div class="feature-detail-label">Feature 04</div>
+          <h3>ワークフロー自動化</h3>
+          <p>繰り返し作業をルールベースで自動化。「ステータスが完了に変わったら、次の担当者にタスクを割り当てる」「期限の24時間前にリマインダーを送信する」など、柔軟な条件とアクションを組み合わせて、チームの定型業務を効率化します。</p>
+          <ul class="feature-detail-points">
+            <li>ノーコードでルールを作成</li>
+            <li>条件分岐とアクションの柔軟な組み合わせ</li>
+            <li>自動通知・担当者割り当て・ステータス変更</li>
+            <li>外部ツールへのWebhook連携</li>
+          </ul>
+        </div>
+        <div class="feature-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot red"></div>
+            <div class="mockup-dot yellow"></div>
+            <div class="mockup-dot green"></div>
+          </div>
+          <div class="mockup-body">
+            <div class="auto-mockup">
+              <div class="auto-step">
+                <div class="auto-step-icon" style="background:#dbeafe;">📥</div>
+                <div class="auto-step-text"><strong>トリガー：</strong>タスクのステータスが「完了」に変更</div>
+              </div>
+              <div class="auto-arrow">↓</div>
+              <div class="auto-step">
+                <div class="auto-step-icon" style="background:#fef3c7;">🔍</div>
+                <div class="auto-step-text"><strong>条件：</strong>プロジェクトが「開発チーム」に所属</div>
+              </div>
+              <div class="auto-arrow">↓</div>
+              <div class="auto-step">
+                <div class="auto-step-icon" style="background:#d1fae5;">📨</div>
+                <div class="auto-step-text"><strong>アクション：</strong>QAチームに通知を送信 + レビュータスクを自動作成</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Feature 5: Time Tracking ===== -->
+  <section class="section" id="timetracking">
+    <div class="container">
+      <div class="feature-detail fade-in">
+        <div>
+          <div class="feature-detail-icon green">⏱</div>
+          <div class="feature-detail-label">Feature 05</div>
+          <h3>タイムトラッキング</h3>
+          <p>タスクごとの作業時間を正確に記録。ワンクリックでタイマーを開始し、作業時間を自動で集計します。チーム全体の稼働状況を把握し、リソース配分の最適化や見積もり精度の向上に活用できます。月次レポートの自動生成にも対応しています。</p>
+          <ul class="feature-detail-points">
+            <li>ワンクリックタイマーで手軽に計測</li>
+            <li>プロジェクト別・メンバー別の集計レポート</li>
+            <li>見積もり時間と実績の比較分析</li>
+            <li>月次レポートの自動生成とエクスポート</li>
+          </ul>
+        </div>
+        <div class="feature-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot red"></div>
+            <div class="mockup-dot yellow"></div>
+            <div class="mockup-dot green"></div>
+          </div>
+          <div class="mockup-body">
+            <div class="time-mockup">
+              <div class="time-entry">
+                <div class="time-entry-left">
+                  <div class="time-entry-dot" style="background:#2563eb;"></div>
+                  <span class="time-entry-name">API設計レビュー</span>
+                </div>
+                <span class="time-entry-dur">2h 35m</span>
+              </div>
+              <div class="time-entry">
+                <div class="time-entry-left">
+                  <div class="time-entry-dot" style="background:#06b6d4;"></div>
+                  <span class="time-entry-name">フロントエンド実装</span>
+                </div>
+                <span class="time-entry-dur">4h 12m</span>
+              </div>
+              <div class="time-entry">
+                <div class="time-entry-left">
+                  <div class="time-entry-dot" style="background:#8b5cf6;"></div>
+                  <span class="time-entry-name">テストケース作成</span>
+                </div>
+                <span class="time-entry-dur">1h 48m</span>
+              </div>
+              <div class="time-entry">
+                <div class="time-entry-left">
+                  <div class="time-entry-dot" style="background:#f59e0b;"></div>
+                  <span class="time-entry-name">ミーティング</span>
+                </div>
+                <span class="time-entry-dur">0h 45m</span>
+              </div>
+              <div style="text-align:right;padding:8px 0;font-size:0.85rem;color:var(--text-light);">合計：<strong style="color:var(--text);font-size:1rem;">9h 20m</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Feature 6: Mobile App ===== -->
+  <section class="section section-alt" id="mobile">
+    <div class="container">
+      <div class="feature-detail reverse fade-in">
+        <div>
+          <div class="feature-detail-icon rose">📱</div>
+          <div class="feature-detail-label">Feature 06</div>
+          <h3>モバイルアプリ</h3>
+          <p>iOS・Androidネイティブアプリで、外出先でもチームの最新状況を把握。タスクの確認・更新・コメントはもちろん、プッシュ通知で重要なアップデートを逃しません。Web版と完全同期し、デバイスを問わずシームレスなワークフローを実現します。</p>
+          <ul class="feature-detail-points">
+            <li>iOS / Android ネイティブアプリ対応</li>
+            <li>オフラインモードで接続なしでも閲覧可能</li>
+            <li>プッシュ通知で重要な更新をリアルタイム受信</li>
+            <li>生体認証（Face ID / Touch ID）対応</li>
+          </ul>
+        </div>
+        <div class="mobile-mockup-wrapper">
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-body">
+              <div style="font-size:0.82rem;font-weight:700;margin-bottom:10px;padding:4px 0;">マイタスク</div>
+              <div class="phone-card">
+                <strong>API設計レビュー</strong>
+                期限: 3/15 ・ 進行中
+              </div>
+              <div class="phone-card">
+                <strong>UI修正対応</strong>
+                期限: 3/18 ・ 未着手
+              </div>
+              <div class="phone-card">
+                <strong>週次レポート作成</strong>
+                期限: 3/14 ・ 完了
+              </div>
+              <div class="phone-card">
+                <strong>ミーティング資料</strong>
+                期限: 3/16 ・ 進行中
+              </div>
+            </div>
+          </div>
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-body">
+              <div style="font-size:0.82rem;font-weight:700;margin-bottom:10px;padding:4px 0;">通知</div>
+              <div class="phone-card">
+                <strong>田中さんがコメント</strong>
+                「修正内容を確認しました」
+              </div>
+              <div class="phone-card">
+                <strong>タスク完了</strong>
+                LP デザイン確認が完了
+              </div>
+              <div class="phone-card">
+                <strong>リマインダー</strong>
+                API設計レビュー 期限まで1日
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box fade-in">
+        <h2>すべての機能を無料で試せます</h2>
+        <p>14日間の無料トライアルで、TaskFlowの全機能をチームで体験してください。</p>
+        <a href="contact.html" class="btn btn-large">無料トライアルを開始 →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo" style="color:#fff;">
+            <div class="logo-icon">T</div>
+            TaskFlow
+          </a>
+          <p>チームの力を最大化するプロジェクト管理ツール。タスク管理・進捗可視化・チームコラボレーションをひとつに。</p>
+        </div>
+        <div>
+          <h4>プロダクト</h4>
+          <ul class="footer-links">
+            <li><a href="features.html">機能一覧</a></li>
+            <li><a href="pricing.html">料金プラン</a></li>
+            <li><a href="integrations.html">インテグレーション</a></li>
+            <li><a href="updates.html">アップデート</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>リソース</h4>
+          <ul class="footer-links">
+            <li><a href="help.html">ヘルプセンター</a></li>
+            <li><a href="api-docs.html">APIドキュメント</a></li>
+            <li><a href="blog.html">ブログ</a></li>
+            <li><a href="case-studies.html">導入事例</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>会社情報</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">会社概要</a></li>
+            <li><a href="careers.html">採用情報</a></li>
+            <li><a href="terms.html">利用規約</a></li>
+            <li><a href="privacy.html">プライバシーポリシー</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 TaskFlow, Inc. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="#" aria-label="X (Twitter)">&#120143;</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Header scroll effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // Mobile menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    hamburger.addEventListener('click', () => {
+      mobileNav.classList.toggle('open');
+    });
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => mobileNav.classList.remove('open'));
+    });
+
+    // Scroll fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
