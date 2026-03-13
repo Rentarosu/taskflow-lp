@@ -1,0 +1,180 @@
+/* ===== Case Studies ===== */
+.case-studies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.case-card {
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.case-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(37,99,235,0.15);
+}
+
+.case-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 36px 40px;
+  background: var(--gradient-bg);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.case-logo-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+.case-company-info h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.case-tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.case-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(37,99,235,0.08);
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 100px;
+}
+
+.case-body {
+  padding: 40px;
+}
+
+.case-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.case-section-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.case-section-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* Results metrics */
+.case-results {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.result-metric {
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--gradient-bg);
+  border-radius: var(--radius);
+}
+.result-number {
+  font-size: 2rem;
+  font-weight: 800;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+.result-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Quote */
+.case-quote {
+  padding: 28px 32px;
+  background: var(--bg-alt);
+  border-left: 4px solid var(--primary);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-top: 8px;
+}
+.case-quote p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.case-quote-author {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.case-quote-role {
+  font-size: 0.82rem;
+  color: var(--text-light);
+}
+
+/* ===== CTA ===== */
+.cta-section { padding: 100px 0; }
+.cta-box {
+  background: var(--gradient); border-radius: var(--radius-lg);
+  padding: 80px 60px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-box::before {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 300px; height: 300px; background: rgba(255,255,255,0.08); border-radius: 50%;
+}
+.cta-box::after {
+  content: ''; position: absolute; bottom: -60px; left: -60px;
+  width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;
+}
+.cta-box h2 {
+  font-size: 2.4rem; font-weight: 800; color: #fff;
+  margin-bottom: 16px; position: relative; z-index: 1;
+}
+.cta-box p {
+  font-size: 1.1rem; color: rgba(255,255,255,0.85); margin-bottom: 36px;
+  max-width: 500px; margin-left: auto; margin-right: auto;
+  position: relative; z-index: 1;
+}
+.cta-box .btn {
+  background: #fff; color: var(--primary);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  position: relative; z-index: 1;
+}
+.cta-box .btn:hover {
+  transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .case-header { padding: 24px; }
+  .case-body { padding: 24px; }
+  .case-grid { grid-template-columns: 1fr; }
+  .case-results { grid-template-columns: 1fr; }
+  .cta-box { padding: 48px 28px; }
+  .cta-box h2 { font-size: 1.6rem; }
+}

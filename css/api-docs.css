@@ -1,0 +1,203 @@
+/* ===== API Content ===== */
+.api-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.api-section {
+  margin-bottom: 64px;
+}
+.api-section h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+.api-section h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  margin-top: 32px;
+}
+.api-section p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.api-info-box {
+  background: var(--gradient-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.api-info-box code {
+  background: rgba(37,99,235,0.08);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+/* ===== Endpoint Cards ===== */
+.endpoint-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+.endpoint-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 24px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+  flex-wrap: wrap;
+}
+.endpoint-card:hover {
+  border-color: rgba(37,99,235,0.2);
+  box-shadow: var(--shadow-sm);
+}
+.method-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  min-width: 64px;
+  text-align: center;
+}
+.method-get { background: #d1fae5; color: #059669; }
+.method-post { background: #dbeafe; color: #2563eb; }
+.method-put { background: #fef3c7; color: #d97706; }
+.method-delete { background: #ffe4e6; color: #e11d48; }
+
+.endpoint-path {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.endpoint-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+/* ===== Code Block ===== */
+.code-block {
+  background: #1e293b;
+  border-radius: var(--radius);
+  padding: 28px;
+  margin: 24px 0;
+  overflow-x: auto;
+  position: relative;
+}
+.code-block-label {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.code-block pre {
+  margin: 0;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #e2e8f0;
+}
+.code-block .token-keyword { color: #c084fc; }
+.code-block .token-string { color: #86efac; }
+.code-block .token-comment { color: #64748b; }
+.code-block .token-url { color: #67e8f9; }
+
+/* ===== Rate Limits Table ===== */
+.rate-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.92rem;
+}
+.rate-table th, .rate-table td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.rate-table th {
+  background: var(--bg-alt);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.rate-table td {
+  color: var(--text-secondary);
+}
+
+/* ===== SDK Cards ===== */
+.sdk-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+.sdk-card {
+  padding: 28px 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.sdk-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(37,99,235,0.2);
+}
+.sdk-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+.sdk-card h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.sdk-card p {
+  font-size: 0.82rem;
+  color: var(--text-light);
+}
+.sdk-card code {
+  display: block;
+  margin-top: 12px;
+  background: var(--bg-alt);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  color: var(--text-secondary);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .sdk-grid { grid-template-columns: repeat(2, 1fr); }
+  .endpoint-desc { margin-left: 0; margin-top: 4px; width: 100%; }
+}
+@media (max-width: 480px) {
+  .sdk-grid { grid-template-columns: 1fr; }
+}
